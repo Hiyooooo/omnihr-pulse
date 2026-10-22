@@ -11,6 +11,7 @@ import {
   payrollDonutData,
   productivityGaugeData,
   examData,
+  pricingTiers,
 } from "@/lib/data";
 
 describe("Analytics Math & Chart Utilities", () => {
@@ -82,5 +83,29 @@ describe("Analytics Math & Chart Utilities", () => {
     expect(examData.batch).toBe(14);
     expect(examData.participants).toBe(240);
     expect(examData.mean).toBe(74);
+  });
+
+  it("pricingTiers defines 3 tiers with correct pricing and min users", () => {
+    expect(pricingTiers).toHaveLength(3);
+    const starter = pricingTiers.find((t) => t.id === "starter");
+    const pro = pricingTiers.find((t) => t.id === "pro");
+    const enterprise = pricingTiers.find((t) => t.id === "enterprise");
+
+    expect(starter?.pricePerUserMonthly).toBe(18000);
+    expect(starter?.minUsers).toBe(20);
+
+    expect(pro?.pricePerUserMonthly).toBe(32000);
+    expect(pro?.highlight).toBe(true);
+
+    expect(enterprise?.pricePerUserMonthly).toBeNull();
+  });
+
+  it("calculates employee cost correctly for interactive slider simulations", () => {
+    const headcount = 75;
+    const starterCost = headcount * 18000;
+    const proCost = headcount * 32000;
+
+    expect(starterCost).toBe(1350000);
+    expect(proCost).toBe(2400000);
   });
 });

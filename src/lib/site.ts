@@ -18,6 +18,7 @@ export const siteConfig = {
     { label: "Exam", href: "#exam" },
     { label: "Perizinan", href: "#perizinan" },
     { label: "Library", href: "#library" },
+    { label: "Harga", href: "#harga" },
   ] as NavItem[],
 };
 

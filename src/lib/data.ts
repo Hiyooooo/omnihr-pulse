@@ -170,3 +170,76 @@ export const librarySopData = {
     { label: "hari rata-rata baca", value: "2,1" },
   ],
 };
+
+export interface PricingTier {
+  id: string;
+  name: string;
+  tagline: string;
+  pricePerUserMonthly: number | null;
+  minUsers: number;
+  highlight?: boolean;
+  badge?: string;
+  features: string[];
+  ctaLabel: string;
+  whatsappMessage: string;
+}
+
+export const pricingTiers: PricingTier[] = [
+  {
+    id: "starter",
+    name: "Pulse Starter",
+    tagline: "Untuk bisnis berkembang yang butuh kepastian kehadiran dan slip gaji tepat waktu.",
+    pricePerUserMonthly: 18000,
+    minUsers: 20,
+    features: [
+      "Absensi GPS, selfie check-in, dan batas geofencing cabang",
+      "Perhitungan payroll otomatis (gaji pokok, tunjangan, potongan)",
+      "Distribusi slip gaji digital otomatis via WhatsApp dan email",
+      "Persetujuan izin sakit dan cuti berjenjang standar",
+      "Laporan ekspor kehadiran format Excel dan PDF",
+    ],
+    ctaLabel: "Mulai Paket Starter",
+    whatsappMessage:
+      "Halo Tim OmniHR Pulse, saya ingin berkonsultasi mengenai implementasi Paket Pulse Starter (Rp 18.000 / karyawan) untuk tim kami.",
+  },
+  {
+    id: "pro",
+    name: "Pulse Pro",
+    tagline: "Paket analitik lengkap untuk tim sales lapangan, e-commerce, dan operasional cepat.",
+    pricePerUserMonthly: 32000,
+    minUsers: 50,
+    highlight: true,
+    badge: "Paling Diminati",
+    features: [
+      "Seluruh fitur di Paket Pulse Starter",
+      "Hero Live Dashboard real-time (ketepatan waktu, budget ratio, productivity gauge)",
+      "Heatmap kehadiran mingguan 7x12 jam dan analisis jam sibuk",
+      "Proyeksi pengeluaran payroll 8 bulan dan breakdown lembur per divisi",
+      "Ujian evaluasi online dengan kurva normal Gauss dan skill-gap per divisi",
+      "Kalender musiman cuti 12 bulan dengan peringatan dini defisit staf operasional",
+      "Notifikasi pengingat keterbacaan dokumen SOP via WhatsApp",
+    ],
+    ctaLabel: "Pilih Paket Pro",
+    whatsappMessage:
+      "Halo Tim OmniHR Pulse, saya tertarik dengan Paket Pulse Pro (Rp 32.000 / karyawan) dan ingin menjadwalkan live demo fitur analitiknya.",
+  },
+  {
+    id: "enterprise",
+    name: "Pulse Enterprise",
+    tagline: "Dirancang khusus untuk armada skala besar, multi-entitas, dan kebutuhan kustomisasi.",
+    pricePerUserMonthly: null,
+    minUsers: 250,
+    features: [
+      "Seluruh fitur di Paket Pulse Pro tanpa batasan kuota",
+      "Dukungan multi-perusahaan, multi-cabang, dan multi-entitas legal",
+      "Integrasi mesin fingerprint biometrik dan API webhook sistem internal",
+      "Audit log keamanan data komprehensif dan retensi data tak terbatas",
+      "Dedicated Account Manager dan technical support prioritas 24/7",
+      "Service Level Agreement (SLA) jaminan uptime 99.9%",
+    ],
+    ctaLabel: "Konsultasi Enterprise",
+    whatsappMessage:
+      "Halo Tim OmniHR Pulse, saya ingin menjadwalkan sesi konsultasi khusus Paket Pulse Enterprise untuk organisasi kami di atas 250 karyawan.",
+  },
+];
+

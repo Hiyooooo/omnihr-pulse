@@ -12,6 +12,7 @@ import { PayrollVisual } from "@/components/modules/PayrollVisual";
 import { ExamVisual } from "@/components/modules/ExamVisual";
 import { LeaveVisual } from "@/components/modules/LeaveVisual";
 import { LibraryVisual } from "@/components/modules/LibraryVisual";
+import { PricingSection } from "@/components/sections/PricingSection";
 import { TooltipProvider } from "@/components/ui/Tooltip";
 import { generateSchema } from "@/lib/schema";
 
@@ -129,6 +130,9 @@ export default function Home() {
           imageCaptionRight="89% dibaca"
           visualComponent={<LibraryVisual />}
         />
+
+        {/* Pricing & Interactive Cost Calculator */}
+        <PricingSection />
 
         {/* Statement Band */}
         <StatementBand />

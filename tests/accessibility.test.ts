@@ -7,6 +7,7 @@ import {
   examData,
   leaveSeasonalityData,
   librarySopData,
+  pricingTiers,
 } from "@/lib/data";
 import { generateSchema } from "@/lib/schema";
 
@@ -24,12 +25,20 @@ describe("Accessibility & Quality Gate Verifications", () => {
       examData,
       leaveSeasonalityData,
       librarySopData,
+      pricingTiers,
     });
     expect(allDataSerialized).not.toContain("—");
   });
 
   it("validates all navigation items have genuine accessible section destinations", () => {
-    const validTargets = ["#absensi", "#gaji", "#exam", "#perizinan", "#library"];
+    const validTargets = [
+      "#absensi",
+      "#gaji",
+      "#exam",
+      "#perizinan",
+      "#library",
+      "#harga",
+    ];
     siteConfig.navItems.forEach((item) => {
       expect(validTargets).toContain(item.href);
       expect(item.href).not.toBe("#");

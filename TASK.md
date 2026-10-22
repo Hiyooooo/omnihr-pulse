@@ -111,5 +111,14 @@
 
 ---
 
+### Phase 7: Section Harga & Kalkulator Biaya Karyawan (Pricing & Calculator)
+- [x] **Task 7.1:** Tambahkan dataset paket harga dan kalkulator di `src/lib/data.ts` serta update `src/lib/site.ts` untuk navigasi `#harga`.
+- [x] **Task 7.2:** Buat komponen `src/components/sections/PricingSection.tsx` dengan Interactive Employee Cost Calculator slider dan 3 kartu paket berjenjang.
+- [x] **Task 7.3:** Integrasikan `PricingSection` ke dalam `src/app/page.tsx` dan tambahkan menu `Harga` pada `Topnav.tsx` dan `Footer.tsx`.
+- [x] **Task 7.4:** Perbarui pengujian `tests/accessibility.test.ts` dan `tests/analytics.test.ts` untuk memvalidasi kalkulasi harga dan ketiadaan em dash.
+- [x] **Task 7.5:** Jalankan `npm run test` dan `npm run build` untuk memastikan build produksi dan test suite 100% lulus.
+
+---
+
 ## Kriteria Selesai (Sign-off)
 Setelah semua task di atas tercentang, proyek Website 08: OmniHR Pulse siap diserahkan dan dipresentasikan.
