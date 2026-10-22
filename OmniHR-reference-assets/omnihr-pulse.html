@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OmniHR Pulse — HRIS Berbasis Analitik & Metrik Kinerja Real-Time</title>
+<meta name="description" content="Ambil keputusan SDM berbasis data akurat. Pantau analitik absensi, efisiensi payroll, dan evaluasi staf dalam satu layar." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="OmniHR Pulse - HRIS Berbasis Analitik & Metrik Kinerja Real-Time" />
+<meta property="og:description" content="Ambil keputusan SDM berbasis data akurat. Pantau analitik absensi, efisiensi payroll, dan evaluasi staf dalam satu layar." />
+<meta property="og:locale" content="id_ID" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="theme-color" content="#0A0918" />
+<style>
+  :root{
+    /* ── brand tokens (see brand-spec.md) ───────────────────────── */
+    --bg: oklch(0.151 0.032 285);
+    --surface: oklch(0.200 0.049 284.7);
+    --inset: oklch(0.175 0.040 285);
+    --fg: oklch(0.958 0.015 298.6);
+    --muted: oklch(0.694 0.055 290.9);
+    --border: oklch(0.296 0.074 285.3);
+    --accent: oklch(0.606 0.219 292.7);
+    --accent-strong: oklch(0.541 0.246 293);
+    --indigo: oklch(0.457 0.215 277);
+
+    /* illustration palette — same family as the charts */
+    --il-bg: oklch(0.183 0.045 285);
+    --il-panel: oklch(0.235 0.058 285);
+    --il-line: oklch(0.335 0.085 286);
+    --il-1: oklch(0.457 0.215 277);
+    --il-2: oklch(0.606 0.219 292.7);
+    --il-3: oklch(0.833 0.091 292.1);
+    --il-4: oklch(0.925 0.035 295);
+    --il-skin: oklch(0.759 0.083 60.6);
+    --il-skin-2: oklch(0.665 0.093 57);
+    --il-hair: oklch(0.295 0.05 291);
+
+    /* derived */
+    --accent-soft: color-mix(in oklch, var(--accent) 16%, transparent);
+    --accent-line: color-mix(in oklch, var(--accent) 55%, transparent);
+    --fg-soft: color-mix(in oklch, var(--fg) 6%, transparent);
+    --ok: oklch(0.76 0.15 162);
+    --warn: oklch(0.83 0.14 82);
+
+    --font-display: 'Bahnschrift', 'DIN Alternate', 'Segoe UI Variable Display', system-ui, sans-serif;
+    --font-body: 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Cascadia Mono', 'Consolas', ui-monospace, monospace;
+
+    --fs-h1: clamp(36px, 4.2vw, 52px);
+    --fs-h2: clamp(28px, 3.2vw, 40px);
+    --fs-h3: 21px;
+    --fs-lead: 17px;
+    --fs-body: 15.5px;
+    --fs-meta: 12.5px;
+
+    --gap-xs: 8px; --gap-sm: 12px; --gap-md: 20px; --gap-lg: 32px;
+    --gap-xl: 56px; --gap-2xl: 96px;
+    --container: 1180px; --gutter: 32px;
+    --radius: 10px; --radius-lg: 18px;
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:var(--font-body); font-size:var(--fs-body); line-height:1.6;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font:inherit; cursor:pointer; }
+  p{ margin:0; text-wrap:pretty; }
+  h1,h2,h3,h4{ margin:0; text-wrap:balance; }
+  ::selection{ background:var(--accent); color:var(--fg); }
+
+  .container{ max-width:var(--container); margin-inline:auto; padding-inline:var(--gutter); }
+  .section{ padding-block:clamp(56px,7vw,104px); border-top:1px solid var(--border); position:relative; }
+  .section:first-of-type{ border-top:0; }
+  .row{ display:flex; align-items:center; gap:var(--gap-md); }
+  .row-between{ display:flex; align-items:center; justify-content:space-between; gap:var(--gap-md); }
+  .stack{ display:flex; flex-direction:column; }
+
+  h1,h2,h3,.display{ font-family:var(--font-display); font-weight:600; letter-spacing:-0.02em; }
+  h1{ font-size:var(--fs-h1); line-height:1.03; }
+  h2{ font-size:var(--fs-h2); line-height:1.08; }
+  h3{ font-size:var(--fs-h3); line-height:1.3; letter-spacing:-0.01em; }
+  .lead{ font-size:var(--fs-lead); line-height:1.6; color:var(--muted); max-width:58ch; }
+  .meta{ font-family:var(--font-mono); font-size:var(--fs-meta); color:var(--muted); }
+  .num{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+  .kicker{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--muted); margin:0 0 20px;
+  }
+  .kicker::before{ content:""; width:18px; height:1px; background:var(--accent); }
+
+  /* ── chrome ─────────────────────────────────────────────────── */
+  .topnav{
+    position:sticky; top:0; z-index:40;
+    background:color-mix(in oklch, var(--bg) 88%, transparent);
+    backdrop-filter:blur(14px); border-bottom:1px solid var(--border);
+  }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding-block:13px; gap:24px; }
+  .brand{ display:inline-flex; align-items:center; gap:10px; font-family:var(--font-display); font-size:17px; font-weight:600; letter-spacing:-0.01em; }
+  .brand-mark{ width:26px; height:26px; border-radius:8px; background:var(--indigo); display:grid; place-items:center; border:1px solid color-mix(in oklch, var(--accent) 45%, transparent); }
+  .brand-mark svg{ width:14px; height:14px; }
+  .brand em{ font-style:normal; color:var(--muted); font-weight:400; }
+  .nav-links{ display:flex; gap:28px; }
+  .nav-links a{ font-size:13.5px; color:var(--muted); transition:color .18s ease, transform .18s ease; }
+  .nav-links a:hover{ color:var(--fg); }
+  .nav-links a:focus-visible,.brand:focus-visible,.btn:focus-visible,.seg-btn:focus-visible,.doc-row:focus-visible{ outline:2px solid var(--il-3); outline-offset:3px; border-radius:6px; }
+
+  /* ── buttons ────────────────────────────────────────────────── */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    min-height:44px; padding:11px 20px; border-radius:var(--radius);
+    border:1px solid transparent; font-size:14.5px; font-weight:600;
+    letter-spacing:-0.005em; transition:background .18s ease, border-color .18s ease, color .18s ease, transform .12s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--accent-strong); color:#fff; border-color:var(--accent-strong); }
+  .btn-primary:hover{ background:oklch(0.478 0.238 293); border-color:oklch(0.478 0.238 293); }
+  .btn-secondary{ background:transparent; color:var(--fg); border-color:var(--border); }
+  .btn-secondary:hover{ border-color:var(--muted); background:var(--fg-soft); }
+  .btn-ghost{ background:transparent; color:var(--fg); padding-inline:6px; border-color:transparent; }
+  .btn-ghost:hover{ color:var(--il-3); }
+  .btn-arrow::after{ content:"→"; transition:transform .18s ease; }
+  .btn-arrow:hover::after{ transform:translateX(3px); }
+  .btn-sm{ min-height:38px; padding:7px 14px; font-size:13px; }
+
+  /* ── hero ───────────────────────────────────────────────────── */
+  .hero{ padding-block:clamp(44px,6vw,84px) clamp(36px,4vw,56px); }
+  .hero-grid{ display:grid; grid-template-columns:1.02fr 0.98fr; gap:clamp(32px,5vw,64px); align-items:center; }
+  .hero h1{ margin-bottom:20px; }
+  .hero h1 .dim{ color:var(--muted); }
+  .hero .lead{ margin-bottom:28px; }
+  .hero-cta{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .trust{ display:flex; align-items:center; gap:8px; margin-top:22px; font-family:var(--font-mono); font-size:11.5px; color:var(--muted); letter-spacing:.02em; }
+  .live-dot{ width:6px; height:6px; border-radius:50%; background:var(--ok); box-shadow:0 0 0 3px color-mix(in oklch, var(--ok) 18%, transparent); animation:pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1; transform:scale(1);} 50%{ opacity:.55; transform:scale(.85);} }
+
+  .hero-visual{ position:relative; }
+  .illu-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:10px; overflow:hidden; position:relative;
+  }
+  .illu-card svg, .illu-card img{ width:100%; height:auto; border-radius:11px; display:block; }
+  .illu-card img{ filter:saturate(.9) contrast(1.04); }
+  .float-chip{
+    position:absolute; z-index:2; display:flex; align-items:center; gap:8px;
+    background:color-mix(in oklch, var(--surface) 94%, transparent);
+    border:1px solid color-mix(in oklch, var(--border) 82%, var(--accent));
+    border-radius:10px; padding:7px 11px; backdrop-filter:blur(14px) saturate(.85);
+    font-family:var(--font-mono); font-size:11px; letter-spacing:.02em; color:var(--fg);
+    box-shadow:0 10px 24px -18px rgba(0,0,0,.9);
+  }
+  .float-chip .fc-label{ color:var(--muted); font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+  .float-chip strong{ font-weight:600; font-variant-numeric:tabular-nums; }
+  .chip-a{ top:22px; left:22px; animation:floaty 7s ease-in-out infinite; }
+  .chip-b{ top:22px; right:22px; animation:floaty 9s ease-in-out infinite reverse; }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-7px);} }
+  .chip-arrow{ color:var(--ok); font-size:10px; }
+
+  /* ── live dashboard ─────────────────────────────────────────── */
+  .dash{
+    margin-top:clamp(32px,4vw,52px); background:var(--surface); border:1px solid var(--border);
+    border-radius:22px; padding:22px; position:relative;
+  }
+  .dash-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding:2px 4px 18px; flex-wrap:wrap; }
+  .dash-title{ font-family:var(--font-display); font-size:17px; font-weight:600; letter-spacing:-0.01em; margin-bottom:3px; }
+  .dash-tools{ display:flex; align-items:center; gap:10px; }
+  .seg{ display:inline-flex; padding:3px; background:var(--inset); border:1px solid var(--border); border-radius:9px; }
+  .seg-btn{
+    border:0; background:transparent; color:var(--muted); font-family:var(--font-mono);
+    font-size:11.5px; letter-spacing:.04em; padding:6px 11px; border-radius:6px; transition:background .16s, color .16s;
+  }
+  .seg-btn:hover{ color:var(--fg); }
+  .seg-btn[aria-pressed="true"]{ background:var(--surface); color:var(--fg); box-shadow:inset 0 0 0 1px var(--border); }
+  .live-pill{ display:inline-flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:6px 10px; border:1px solid var(--border); border-radius:999px; }
+  .live-pill .live-dot{ width:5px; height:5px; }
+
+  .dash-grid{ display:grid; grid-template-columns:1.55fr 1fr 1fr; gap:14px; position:relative; }
+  .widget{
+    background:var(--inset); border:1px solid var(--border); border-radius:14px;
+    padding:16px 16px 12px; display:flex; flex-direction:column; min-height:236px;
+  }
+  .w-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+  .w-label{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); }
+  .w-val{ font-family:var(--font-mono); font-size:25px; letter-spacing:-0.03em; line-height:1.1; }
+  .w-val span{ font-size:13px; color:var(--muted); margin-left:1px; }
+  .w-sub{ display:flex; align-items:center; gap:6px; margin-top:5px; font-size:11.5px; color:var(--muted); font-family:var(--font-mono); }
+  .delta{ display:inline-flex; align-items:center; gap:3px; color:var(--ok); }
+  .delta.down{ color:var(--warn); }
+  .delta svg{ width:9px; height:9px; }
+  .chart{ margin-top:auto; position:relative; }
+  .chart svg{ width:100%; height:auto; overflow:visible; }
+  .x-axis{ display:flex; justify-content:space-between; margin-top:6px; font-family:var(--font-mono); font-size:10px; color:var(--muted); }
+  .chart .grid-line{ stroke:var(--border); stroke-width:1; opacity:.55; }
+  .chart .line{ fill:none; stroke:var(--accent); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; transition:opacity .2s; }
+  .chart .line-2{ stroke:var(--il-3); stroke-width:1.4; stroke-dasharray:4 4; opacity:.55; }
+  .chart .area{ fill:url(#areaGrad); }
+  .chart .dot{ fill:var(--accent); stroke:var(--inset); stroke-width:2; }
+  .chart .bar{ fill:var(--indigo); transition:fill .15s; }
+  .chart .bar:hover{ fill:var(--accent); }
+  .chart .cross{ stroke:var(--muted); stroke-width:1; stroke-dasharray:3 3; opacity:0; }
+  .chart:hover .cross{ opacity:.6; }
+  .hit{ fill:transparent; }
+
+  .donut-wrap{ display:flex; align-items:center; justify-content:center; flex:1; margin-top:6px; }
+  .donut{ position:relative; width:100%; max-width:150px; }
+  .donut svg{ transform:rotate(-90deg); }
+  .donut .track{ stroke:color-mix(in oklch, var(--border) 70%, transparent); fill:none; }
+  .donut .seg-arc{ fill:none; stroke-linecap:butt; transition:opacity .2s, stroke-width .2s; cursor:pointer; }
+  .donut .seg-arc:hover{ opacity:1; stroke-width:15; }
+  .donut-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; pointer-events:none; }
+  .donut-center .dc-val{ font-family:var(--font-mono); font-size:19px; letter-spacing:-.02em; }
+  .donut-center .dc-lab{ font-family:var(--font-mono); font-size:9.5px; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; }
+  .legend{ display:flex; flex-direction:column; gap:5px; margin-top:4px; font-family:var(--font-mono); font-size:10.5px; color:var(--muted); }
+  .legend span{ display:flex; align-items:center; gap:6px; }
+  .legend i{ width:7px; height:7px; border-radius:2px; display:inline-block; }
+
+  .gauge-wrap{ display:flex; flex-direction:column; align-items:center; flex:1; justify-content:center; margin-top:4px; }
+  .gauge{ position:relative; width:100%; max-width:180px; }
+  .gauge-val{ text-align:center; margin-top:4px; }
+  .gauge-val .gv-num{ font-family:var(--font-mono); font-size:26px; letter-spacing:-.03em; line-height:1; }
+  .gauge-val .gv-lab{ font-family:var(--font-mono); font-size:9.5px; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; }
+  .gauge .needle{ transform-origin:90px 88px; transition:transform 1s cubic-bezier(.2,.8,.2,1); }
+  .gauge .g-track{ stroke:color-mix(in oklch, var(--border) 80%, transparent); }
+  .gauge .g-fill{ stroke:var(--accent); transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1); }
+  .gauge-scale{ display:flex; justify-content:space-between; width:100%; max-width:180px; font-family:var(--font-mono); font-size:9.5px; color:var(--muted); margin-top:6px; }
+
+  .tooltip{
+    position:fixed; z-index:99; pointer-events:none; opacity:0; transform:translate(-50%,-118%);
+    background:var(--fg); color:var(--bg); border-radius:7px; padding:6px 9px;
+    font-family:var(--font-mono); font-size:11px; line-height:1.4; white-space:nowrap;
+    box-shadow:0 12px 24px -12px rgba(0,0,0,.8); transition:opacity .12s ease;
+  }
+  .tooltip.on{ opacity:1; }
+  .tooltip b{ font-weight:600; }
+  /* ── module sections ────────────────────────────────────────── */
+  .intro-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(28px,5vw,72px); align-items:end; }
+  .intro-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+  .tag{ display:inline-flex; align-items:center; padding:4px 10px; border:1px solid var(--border); border-radius:999px; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.02em; color:var(--muted); white-space:nowrap; }
+  .module{ padding-block:clamp(52px,6vw,88px); }
+  .m-head{ display:grid; grid-template-columns:56px minmax(0,1fr) 262px; gap:clamp(20px,4vw,44px); align-items:start; margin-bottom:clamp(28px,4vw,44px); }
+  .m-index{ font-size:12px; letter-spacing:.1em; color:var(--muted); padding-top:10px; border-top:1px solid var(--border); }
+  .m-title h2{ max-width:30ch; margin-bottom:14px; }
+  .m-title .lead{ font-size:15.5px; max-width:62ch; }
+  .m-points{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; font-size:13px; color:var(--muted); line-height:1.5; }
+  .m-points li{ position:relative; padding-left:17px; }
+  .m-points li::before{ content:""; position:absolute; left:0; top:7px; width:6px; height:6px; background:var(--indigo); border:1px solid color-mix(in oklch,var(--accent) 55%, transparent); border-radius:1.5px; transform:rotate(45deg); }
+
+  .m-body{ display:grid; grid-template-columns:.94fr 1.06fr; gap:22px; align-items:start; }
+  .m-body.rev{ grid-template-columns:1.06fr .94fr; }
+  .illu-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:10px 10px 4px; }
+  .illu-card svg, .illu-card img{ width:100%; height:auto; border-radius:12px; animation:drift 16s ease-in-out infinite; }
+  .illu-card{ margin:0; }
+  .m-body > .illu-card:nth-child(2){ animation-delay:-6s; }
+  @keyframes drift{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
+  .illu-cap{ display:flex; justify-content:space-between; gap:12px; padding:9px 5px 6px; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.03em; color:var(--muted); }
+  .illu-cap span:last-child{ color:color-mix(in oklch, var(--accent) 58%, var(--fg)); font-variant-numeric:tabular-nums; }
+
+  .data-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 22px 22px; display:flex; flex-direction:column; gap:0; }
+  .dc-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:16px; }
+  .dc-title{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .dc-note{ font-family:var(--font-mono); font-size:10.5px; color:var(--muted); opacity:.86; margin-top:4px; }
+  .mini-line{ width:100%; height:auto; overflow:visible; margin-top:6px; }
+  .mini-line .grid-line{ stroke:var(--border); stroke-width:1; opacity:.5; }
+  .mini-line .line-main{ fill:none; stroke:var(--accent); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+  .mini-line .line-alt{ fill:none; stroke:var(--il-3); stroke-width:1.8; stroke-dasharray:5 4; stroke-linecap:round; }
+  .mini-line .pagu{ fill:none; stroke:var(--muted); stroke-width:1; stroke-dasharray:3 4; opacity:.6; }
+  .mini-line .area{ fill:url(#areaGrad); }
+  .mini-line .area-2{ fill:url(#areaGrad2); }
+  .mini-line .dot{ fill:var(--accent); stroke:var(--surface); stroke-width:2; }
+  .mini-line .x-lbl{ font-family:var(--font-mono); font-size:9px; fill:var(--muted); }
+
+  .hm-block{ margin-top:18px; }
+  .heat{ display:grid; grid-template-columns:26px repeat(12,minmax(0,1fr)); gap:3px; align-items:center; }
+  .heat-lbl{ font-family:var(--font-mono); font-size:9px; color:var(--muted); }
+  .heat-cell{ aspect-ratio:1.5; border-radius:2px; transition:transform .12s ease, outline-color .12s ease; outline:1px solid transparent; }
+  .heat-cell:hover{ transform:scale(1.18); outline-color:var(--fg); }
+  .heat-hours{ display:grid; grid-template-columns:26px repeat(12,minmax(0,1fr)); gap:3px; margin-top:5px; font-family:var(--font-mono); font-size:9px; color:var(--muted); }
+  .heat-hours span{ text-align:center; }
+  .heat-scale{ display:flex; align-items:center; gap:8px; margin-top:9px; font-family:var(--font-mono); font-size:9.5px; color:var(--muted); }
+  .heat-ramp{ flex:1; height:4px; border-radius:2px; background:linear-gradient(90deg, oklch(0.27 0.05 285), oklch(0.52 0.15 288), oklch(0.80 0.15 292)); }
+
+  .bar-list{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+  .bar-row{ display:grid; grid-template-columns:102px minmax(0,1fr) 56px; align-items:center; gap:10px; }
+  .bar-label{ font-family:var(--font-mono); font-size:10.5px; color:var(--muted); }
+  .bar-track{ display:block; height:6px; border-radius:3px; background:var(--inset); overflow:hidden; }
+  .bar-fill{ display:block; height:100%; width:0; border-radius:3px; background:color-mix(in oklch, var(--indigo) 52%, var(--il-3)); transition:width .9s cubic-bezier(.2,.8,.2,1); }
+  .bar-row.hot .bar-fill{ background:var(--accent); }
+  .bar-val{ font-family:var(--font-mono); font-size:10.5px; color:var(--fg); text-align:right; font-variant-numeric:tabular-nums; }
+
+  .col-chart{ display:flex; align-items:flex-end; gap:5px; height:142px; margin-top:10px; border-bottom:1px solid var(--border); }
+  .col-val{ font-family:var(--font-mono); font-size:9.5px; color:var(--fg); text-align:center; margin-bottom:5px; }
+  .col{ flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%; }
+  .col-bar{ height:0; background:var(--il-1); border-radius:3px 3px 0 0; transition:height .8s cubic-bezier(.2,.8,.2,1); }
+  .col.hot .col-bar{ background:var(--accent); }
+  .col:hover .col-bar{ background:var(--il-3); }
+  .callout{ display:flex; gap:10px; align-items:flex-start; margin-top:18px; padding:12px 14px; border:1px solid color-mix(in oklch, var(--warn) 30%, var(--border)); background:color-mix(in oklch, var(--warn) 7%, transparent); border-radius:10px; font-size:12.5px; line-height:1.5; color:var(--fg); }
+  .callout strong{ color:var(--warn); font-weight:600; }
+  .callout-dot{ width:7px; height:7px; border-radius:50%; background:var(--warn); margin-top:6px; flex:none; }
+
+  .mini-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px; }
+  .ms-num{ display:block; font-family:var(--font-mono); font-size:17px; letter-spacing:-.02em; }
+  .ms-lab{ display:block; font-size:10.5px; color:var(--muted); margin-top:3px; line-height:1.35; }
+
+  .doc-list{ display:flex; flex-direction:column; gap:16px; margin-top:2px; }
+  .doc-row{ display:grid; grid-template-columns:1fr auto; gap:7px 12px; }
+  .doc-name{ font-size:13.5px; line-height:1.4; }
+  .doc-pct{ font-family:var(--font-mono); font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .doc-bar{ display:block; grid-column:1/-1; height:5px; border-radius:3px; background:var(--inset); overflow:hidden; }
+  .doc-fill{ display:block; height:100%; width:0; border-radius:3px; background:color-mix(in oklch, var(--indigo) 52%, var(--il-3)); transition:width 1s cubic-bezier(.2,.8,.2,1); }
+  .doc-row.low .doc-fill{ background:var(--accent); }
+
+  /* ── band, cta, footer ──────────────────────────────────────── */
+  .band{ padding-block:clamp(64px,9vw,124px); }
+  .band-text{ font-size:clamp(30px,4.1vw,54px); line-height:1.08; letter-spacing:-.025em; }
+  .band-text span{ color:var(--muted); }
+  .cta-inner{ display:grid; grid-template-columns:1.15fr auto; gap:clamp(24px,4vw,56px); align-items:center; }
+  .cta h2{ max-width:24ch; }
+  .cta-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+
+  .pagefoot{ border-top:1px solid var(--border); padding-block:46px 26px; }
+  .foot-grid{ display:grid; grid-template-columns:1.7fr 1fr 1fr 1fr; gap:36px; }
+  .foot-col{ display:flex; flex-direction:column; gap:9px; font-size:13px; color:var(--muted); }
+  .foot-col a{ transition:color .16s ease; }
+  .foot-col a:hover{ color:var(--fg); }
+  .foot-title{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--fg); margin-bottom:3px; }
+  .foot-bar{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:44px; padding-top:18px; border-top:1px solid var(--border); }
+  .rule{ border:0; border-top:1px solid var(--border); margin:0; }
+
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--il-3); outline-offset:3px; }
+
+  @media (max-width:1000px){
+    .m-head{ grid-template-columns:44px minmax(0,1fr); }
+    .m-points{ grid-column:2; }
+  }
+  @media (max-width:920px){
+    :root{ --gutter:20px; }
+    .hero-grid, .intro-grid, .dash-grid, .m-head, .m-body, .m-body.rev, .cta-inner, .foot-grid{ grid-template-columns:1fr; }
+    .nav-links{ display:none; }
+    .dash{ padding:16px; }
+    .dash-grid{ gap:12px; }
+    .m-index{ display:none; }
+    .m-head{ gap:16px; }
+    .m-points{ grid-column:1; margin-top:4px; }
+    .heat{ grid-template-columns:20px repeat(12,minmax(0,1fr)); gap:2px; }
+    .heat-cell{ aspect-ratio:1.2; }
+    .chip-a{ left:8px; top:8px; }
+    .chip-b{ left:8px; bottom:8px; }
+    .foot-grid{ grid-template-columns:1fr 1fr; gap:26px; }
+    .band-text br{ display:none; }
+    .hero{ padding-block:36px 28px; }
+    .mini-stats{ gap:8px; }
+    .bar-row{ grid-template-columns:86px minmax(0,1fr) 50px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *, *::before, *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  }
+
+</style>
+</head>
+<body>
+
+<header class="topnav" data-od-id="topnav">
+  <div class="container nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="var(--il-3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 9h3l2-5 3 8 2-5h4"/></svg>
+      </span>
+      OmniHR <em>Pulse</em>
+    </a>
+    <nav class="nav-links" aria-label="Modul">
+      <a href="#absensi">Absensi</a>
+      <a href="#gaji">Gaji</a>
+      <a href="#exam">Exam</a>
+      <a href="#perizinan">Perizinan</a>
+      <a href="#library">Library</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#demo">Buka dashboard</a>
+  </div>
+</header>
+
+<main id="content">
+  <!-- ── HERO ─────────────────────────────────────────────────── -->
+  <section class="section hero" id="top" data-od-id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <p class="kicker">HRIS analitik · real-time</p>
+          <h1>Setiap keputusan SDM punya angkanya.</h1>
+          <p class="lead">OmniHR Pulse menyatukan absensi, payroll, ujian, izin, dan SOP dalam satu layar analitik — supaya tim sales, finance, dan operasional memutuskan dengan data pagi ini, bukan rekap akhir bulan.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#demo">Buka dashboard live</a>
+            <a class="btn btn-ghost btn-arrow" href="#modul">Lihat 5 modul</a>
+          </div>
+          <p class="trust"><span class="live-dot" aria-hidden="true"></span>Sinkron tiap 30 detik · 1.248 karyawan di workspace demo</p>
+        </div>
+
+        <div class="hero-visual">
+          <div class="illu-card">
+            <img src="assets/hero.jpg" width="1600" height="1067" alt="Empat anggota tim penjualan dan produk berdiskusi di meja kerja sambil membuka laptop, tablet, dan dokumen analitik">
+          </div>
+          <div class="float-chip chip-a" aria-hidden="true">
+            <span class="live-dot"></span><span class="fc-label">Hadir</span><strong>96,4%</strong><span class="chip-arrow">▲</span>
+          </div>
+          <div class="float-chip chip-b" aria-hidden="true">
+            <span class="fc-label">Payroll</span><strong>Rp 8,4 M</strong><span class="meta" style="font-size:10px">/ 10 M</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--accent)" stop-opacity=".30"/>
+      <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="areaGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--indigo)" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="var(--indigo)" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<section class="section" id="demo" data-od-id="live-dashboard" style="padding-top:0; border-top:0;">
+  <div class="container">
+    <div class="dash">
+      <div class="dash-head">
+        <div>
+          <p class="dash-title">Pulse hari ini</p>
+          <p class="meta">Rabu, 21 Oktober 2026 · 09.42 WIB · workspace demo</p>
+        </div>
+        <div class="dash-tools">
+          <div class="seg" role="group" aria-label="Rentang waktu grafik kehadiran">
+            <button class="seg-btn" data-range="7" aria-pressed="false">7H</button>
+            <button class="seg-btn" data-range="30" aria-pressed="true">30H</button>
+            <button class="seg-btn" data-range="90" aria-pressed="false">90H</button>
+          </div>
+          <span class="live-pill"><span class="live-dot"></span>Live</span>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <!-- line chart -->
+        <div class="widget">
+          <div class="w-head">
+            <span class="w-label">Ketepatan waktu</span>
+            <span class="w-val" id="att-val">94,2<span>%</span></span>
+          </div>
+          <div class="w-sub"><span class="delta"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 8V2M2 5l3-3 3 3"/></svg>1,2 pts</span> vs periode lalu</div>
+          <div class="chart" id="att-chart" style="margin-top:16px">
+            <svg viewBox="0 0 420 148" aria-label="Grafik tren ketepatan waktu kehadiran">
+              <g id="att-grid"></g>
+              <g id="att-series"></g>
+              <rect class="hit" id="att-hit" x="0" y="0" width="420" height="148"></rect>
+            </svg>
+            <div class="x-axis" id="att-axis"></div>
+          </div>
+          <div class="legend" style="flex-direction:row; gap:14px; margin-top:10px">
+            <span><i style="background:var(--accent)"></i>Tepat waktu</span>
+            <span><i style="background:var(--il-3); opacity:.55"></i>Target 92%</span>
+          </div>
+        </div>
+
+        <!-- donut -->
+        <div class="widget">
+          <div class="w-head">
+            <span class="w-label">Rasio anggaran payroll</span>
+          </div>
+          <div class="w-sub"><span class="meta" style="font-size:11.5px">Oktober · terpakai 84%</span></div>
+          <div class="donut-wrap">
+            <div class="donut" id="payroll-donut">
+              <svg viewBox="0 0 120 120" aria-label="Donat komposisi anggaran payroll">
+                <circle class="track" cx="60" cy="60" r="46" stroke-width="13"/>
+                <circle class="seg-arc" cx="60" cy="60" r="46" stroke="var(--accent)" stroke-width="13" data-seg="0" data-label="Gaji pokok" data-val="62" stroke-dasharray="0 289"/>
+                <circle class="seg-arc" cx="60" cy="60" r="46" stroke="var(--indigo)" stroke-width="13" data-seg="1" data-label="Lembur" data-val="14" stroke-dasharray="0 289"/>
+                <circle class="seg-arc" cx="60" cy="60" r="46" stroke="var(--il-3)" stroke-width="13" data-seg="2" data-label="Tunjangan" data-val="24" stroke-dasharray="0 289" opacity=".82"/>
+              </svg>
+              <div class="donut-center">
+                <span class="dc-val" id="dc-val">Rp 8,4 M</span>
+                <span class="dc-lab" id="dc-lab">dari 10 M</span>
+              </div>
+            </div>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--accent)"></i>Gaji pokok · 62%</span>
+            <span><i style="background:var(--indigo)"></i>Lembur · 14%</span>
+            <span><i style="background:var(--il-3); opacity:.82"></i>Tunjangan · 24%</span>
+          </div>
+        </div>
+
+        <!-- gauge -->
+        <div class="widget">
+          <div class="w-head">
+            <span class="w-label">Produktivitas tim</span>
+            <span class="meta" style="font-size:10.5px">7 hari</span>
+          </div>
+          <div class="gauge-wrap">
+            <div class="gauge" id="prod-gauge">
+              <svg viewBox="0 0 180 104" aria-label="Gauge produktivitas 78 dari 100">
+                <path d="M22 88a68 68 0 0 1 136 0" fill="none" class="g-track" stroke-width="11" stroke-linecap="round"/>
+                <path d="M22 88a68 68 0 0 1 136 0" fill="none" class="g-fill" stroke-width="11" stroke-linecap="round" id="g-fill" stroke-dasharray="214" stroke-dashoffset="214"/>
+                <g class="needle" id="g-needle">
+                  <line x1="90" y1="88" x2="90" y2="34" stroke="var(--fg)" stroke-width="2.4" stroke-linecap="round"/>
+                  <circle cx="90" cy="88" r="5" fill="var(--fg)"/>
+                </g>
+              </svg>
+              <div class="gauge-val">
+                <div class="gv-num" id="g-num">78</div>
+                <div class="gv-lab">Produktif</div>
+              </div>
+            </div>
+            <div class="gauge-scale"><span>0</span><span>50</span><span>100</span></div>
+          </div>
+          <p class="meta" style="font-size:10.5px; text-align:center; margin-top:6px">Target kuartal · 82</p>
+        </div>
+      </div>
+    </div>
+    <p class="meta" style="text-align:right; margin-top:12px; font-size:11px">Seluruh angka pada halaman ini adalah data demo workspace OmniHR Pulse.</p>
+  </div>
+</section>
+
+<!-- ── MODULE INTRO ───────────────────────────────────────────── -->
+<section class="section" id="modul" data-od-id="module-intro">
+  <div class="container">
+    <div class="intro-grid">
+      <div>
+        <p class="kicker">Lima modul</p>
+        <h2>Satu sumber kebenaran untuk lima pertanyaan SDM yang paling sering ditunda.</h2>
+      </div>
+      <div>
+        <p class="lead">Setiap modul memakai data kehadiran yang sama, jadi angka absensi, lembur, dan biaya tidak pernah bercerita beda di rapat yang berbeda.</p>
+        <div class="intro-tags">
+          <span class="tag">Absensi</span>
+          <span class="tag">Gaji</span>
+          <span class="tag">Exam</span>
+          <span class="tag">Perizinan</span>
+          <span class="tag">Library</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 01 ABSENSI ─────────────────────────────────────────────── -->
+<section class="section module" id="absensi" data-od-id="module-absensi">
+  <div class="container">
+    <div class="m-head">
+      <span class="m-index num">01</span>
+      <div class="m-title">
+        <h2>Ketepatan waktu, terbaca per jam dan per tim.</h2>
+        <p class="lead">Tren check-in 30 hari, jam sibuk per shift, dan heatmap kehadiran mingguan — supaya supervisor tahu di mana jadwal mulai bocor sebelum lembur menumpuk.</p>
+      </div>
+      <ul class="m-points">
+        <li>Pola terlambat per shift dan per lantai</li>
+        <li>Jam sibuk check-in &amp; checkout</li>
+        <li>Heatmap 7×12 jam tanpa ekspor manual</li>
+      </ul>
+    </div>
+
+    <div class="m-body">
+      <div class="illu-card">
+        <img src="assets/absensi.jpg" width="1600" height="1067" alt="Seorang karyawan membuka pintu kaca kantor sambil membawa tas laptop pada pagi hari">
+        <p class="illu-cap"><span>Check-in lapangan · shift pagi</span><span>08.57</span></p>
+      </div>
+
+      <div class="data-card stack">
+        <div class="dc-head">
+          <div>
+            <p class="dc-title">Tren ketepatan waktu</p>
+            <p class="dc-note">30 hari terakhir · seluruh unit</p>
+          </div>
+          <span class="tag">94,2% tepat waktu</span>
+        </div>
+        <svg class="mini-line" viewBox="0 0 480 120" id="m1-line" aria-label="Grafik garis tren ketepatan waktu 30 hari"></svg>
+        <div class="hm-block">
+          <div class="row-between" style="margin-bottom:8px">
+            <p class="dc-title">Heatmap kehadiran</p>
+            <p class="dc-note">Sen–Min · 08.00–19.00</p>
+          </div>
+          <div class="heat" id="heat"></div>
+          <div class="heat-hours" id="heat-hours" aria-hidden="true"></div>
+          <div class="heat-scale"><span>Rendah</span><span class="heat-ramp"></span><span>Penuh</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 02 GAJI ────────────────────────────────────────────────── -->
+<section class="section module" id="gaji" data-od-id="module-gaji">
+  <div class="container">
+    <div class="m-head">
+      <span class="m-index num">02</span>
+      <div class="m-title">
+        <h2>Payroll bulan depan sudah kelihatan hari ini.</h2>
+        <p class="lead">Proyeksi pengeluaran tiga bulan ke depan dari pola absensi dan lembur berjalan, plus beban lembur per divisi — dibandingkan langsung dengan pagu anggaran.</p>
+      </div>
+      <ul class="m-points">
+        <li>Prediksi payroll 3 bulan, bukan 1</li>
+        <li>Beban lembur per divisi</li>
+        <li>Selisih pagu vs realisasi per bulan</li>
+      </ul>
+    </div>
+
+    <div class="m-body rev">
+      <div class="data-card stack">
+        <div class="dc-head">
+          <div>
+            <p class="dc-title">Proyeksi pengeluaran payroll</p>
+            <p class="dc-note">Realisasi solid · proyeksi putus-putus</p>
+          </div>
+          <span class="tag">Pagu Rp 10 M</span>
+        </div>
+        <svg class="mini-line" viewBox="0 0 480 130" id="m2-line" aria-label="Grafik proyeksi pengeluaran payroll"></svg>
+        <div class="legend" style="flex-direction:row; gap:16px">
+          <span><i style="background:var(--accent)"></i>Realisasi</span>
+          <span><i style="background:var(--il-3)"></i>Proyeksi</span>
+          <span><i style="background:var(--border)"></i>Pagu 10 M</span>
+        </div>
+        <hr class="rule" style="margin:6px 0 4px">
+        <p class="dc-title">Beban lembur per divisi · jam</p>
+        <div class="bar-list" id="ot-bars"></div>
+      </div>
+
+      <div class="illu-card">
+        <img src="assets/gaji.jpg" width="1600" height="1067" alt="Dua staf keuangan di kantor memeriksa dokumen penggajian dan tablet kerja">
+        <p class="illu-cap"><span>Payroll · tim finance</span><span>Oktober</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 03 EXAM ────────────────────────────────────────────────── -->
+<section class="section module" id="exam" data-od-id="module-exam">
+  <div class="container">
+    <div class="m-head">
+      <span class="m-index num">03</span>
+      <div class="m-title">
+        <h2>Skor ujian bukan angka mati — ini peta kompetensi.</h2>
+        <p class="lead">Distribusi kurva normal menunjukkan apakah ujian terlalu mudah atau terlalu sulit, lalu analitik skill-gap menunjuk divisi mana yang butuh pelatihan berikutnya.</p>
+      </div>
+      <ul class="m-points">
+        <li>Kurva distribusi skor per angkatan</li>
+        <li>Ambang lulus &amp; sebaran nilai</li>
+        <li>Skill-gap per divisi, bukan per orang</li>
+      </ul>
+    </div>
+
+    <div class="m-body">
+      <div class="illu-card">
+        <img src="assets/exam.jpg" width="1600" height="1067" alt="Tiga karyawan mengikuti sesi pelatihan dan ujian dengan laptop di ruang kelas kantor">
+        <p class="illu-cap"><span>Sertifikasi internal · batch 14</span><span>86 / 100</span></p>
+      </div>
+
+      <div class="data-card stack">
+        <div class="dc-head">
+          <div>
+            <p class="dc-title">Distribusi skor ujian</p>
+            <p class="dc-note">Batch 14 · 240 peserta</p>
+          </div>
+          <span class="tag">Rata-rata 74</span>
+        </div>
+        <svg class="mini-line" viewBox="0 0 480 132" id="m3-curve" aria-label="Kurva distribusi normal skor ujian"></svg>
+        <div class="x-axis" style="margin-top:2px"><span>40</span><span>55</span><span>70</span><span>85</span><span>100</span></div>
+        <hr class="rule" style="margin:10px 0 4px">
+        <p class="dc-title">Skill-gap per divisi</p>
+        <div class="bar-list" id="gap-bars"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 04 PERIZINAN ───────────────────────────────────────────── -->
+<section class="section module" id="perizinan" data-od-id="module-perizinan">
+  <div class="container">
+    <div class="m-head">
+      <span class="m-index num">04</span>
+      <div class="m-title">
+        <h2>Musim cuti terlihat sebulan lebih awal.</h2>
+        <p class="lead">Analitik musim cuti memetakan kapan tim akan kosong, lalu membandingkannya dengan kalender puncak operasional — supaya kepala unit bisa menggeser jadwal sebelum kekurangan staf terjadi.</p>
+      </div>
+      <ul class="m-points">
+        <li>Pola cuti 12 bulan ke belakang</li>
+        <li>Proyeksi kekurangan staf per pekan</li>
+        <li>Peringatan tumpang tindih di bulan puncak</li>
+      </ul>
+    </div>
+
+    <div class="m-body rev">
+      <div class="data-card stack">
+        <div class="dc-head">
+          <div>
+            <p class="dc-title">Musim cuti tahunan</p>
+            <p class="dc-note">% karyawan cuti per bulan · 2026</p>
+          </div>
+          <span class="tag">Puncak Desember</span>
+        </div>
+        <div class="col-chart" id="leave-chart" aria-label="Grafik kolom persentase karyawan cuti per bulan"></div>
+        <div class="x-axis" id="leave-axis" style="margin-top:8px"></div>
+        <div class="callout">
+          <span class="callout-dot" aria-hidden="true"></span>
+          <p><strong>Desember:</strong> 18% tim operasional cuti bersamaan dengan puncak pesanan. Proyeksi kekurangan 9 staf per pekan.</p>
+        </div>
+        <hr class="rule" style="margin:4px 0">
+        <div class="mini-stats">
+          <div><span class="ms-num num">31</span><span class="ms-lab">pengajuan menunggu</span></div>
+          <div><span class="ms-num num">4,2</span><span class="ms-lab">hari rata-rata cuti</span></div>
+          <div><span class="ms-num num">12</span><span class="ms-lab">hari saldo terpakai</span></div>
+        </div>
+      </div>
+
+      <div class="illu-card">
+        <img src="assets/perizinan.jpg" width="1600" height="1067" alt="Seorang karyawan duduk di sofa rumah sambil memegang cangkir kopi, suasana cuti">
+        <p class="illu-cap"><span>Kalender cuti · tim operasional</span><span>Desember</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 05 LIBRARY ─────────────────────────────────────────────── -->
+<section class="section module" id="library" data-od-id="module-library">
+  <div class="container">
+    <div class="m-head">
+      <span class="m-index num">05</span>
+      <div class="m-title">
+        <h2>Tahu siapa yang sudah membaca SOP — dan siapa yang belum.</h2>
+        <p class="lead">Setiap dokumen membawa statistik bacaan dan konfirmasi per divisi. Bukan lagi daftar hadir sosialisasi, tapi bukti bahwa SOP baru benar-benar sampai ke tim.</p>
+      </div>
+      <ul class="m-points">
+        <li>Status baca &amp; konfirmasi per orang</li>
+        <li>Cakupan per divisi dan lokasi kerja</li>
+        <li>Pengingat otomatis ke yang belum</li>
+      </ul>
+    </div>
+
+    <div class="m-body">
+      <div class="illu-card">
+        <img src="assets/library.jpg" width="1600" height="1067" alt="Empat karyawan berdiri di kantor sambil meninjau map dokumen SOP bersama">
+        <p class="illu-cap"><span>Library SOP · versi 4.2</span><span>89% dibaca</span></p>
+      </div>
+
+      <div class="data-card stack">
+        <div class="dc-head">
+          <div>
+            <p class="dc-title">Konfirmasi SOP baru</p>
+            <p class="dc-note">3 dokumen · 240 karyawan</p>
+          </div>
+          <span class="tag">89% rata-rata</span>
+        </div>
+        <div class="doc-list" id="doc-list"></div>
+        <hr class="rule" style="margin:6px 0">
+        <div class="mini-stats">
+          <div><span class="ms-num num">89%</span><span class="ms-lab">sudah membaca</span></div>
+          <div><span class="ms-num num">26</span><span class="ms-lab">belum konfirmasi</span></div>
+          <div><span class="ms-num num">2,1</span><span class="ms-lab">hari rata-rata baca</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATEMENT ──────────────────────────────────────────────── -->
+<section class="section band" data-od-id="statement">
+  <div class="container">
+    <p class="kicker">Prinsip produk</p>
+    <h2 class="band-text">Rekap bulanan menjelaskan masa lalu.<br><span>Pulse menjelaskan minggu depan.</span></h2>
+    <p class="lead" style="margin-top:24px">Karena itu setiap modul dirancang untuk menjawab satu pertanyaan operasional — bukan menampilkan semua angka yang tersedia.</p>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────────── -->
+<section class="section cta" data-od-id="cta-strip">
+  <div class="container cta-inner">
+    <div>
+      <h2>Mulai dari satu dashboard, bukan satu tumpukan spreadsheet.</h2>
+      <p class="lead" style="margin-top:14px">Hubungkan data absensi dan payroll Anda, lihat pulse pertama di hari yang sama.</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="#demo">Jadwalkan demo</a>
+      <a class="btn btn-ghost btn-arrow" href="#modul">Baca modulnya dulu</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="pagefoot" data-od-id="footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="var(--il-3)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 9h3l2-5 3 8 2-5h4"/></svg>
+          </span>
+          OmniHR <em>Pulse</em>
+        </a>
+        <p class="meta" style="margin-top:14px; max-width:30ch">HRIS berbasis analitik untuk tim yang memutuskan dengan angka, bukan asumsi.</p>
+      </div>
+      <div class="foot-col">
+        <p class="foot-title">Modul</p>
+        <a href="#absensi">Absensi</a>
+        <a href="#gaji">Gaji</a>
+        <a href="#exam">Exam</a>
+        <a href="#perizinan">Perizinan</a>
+        <a href="#library">Library</a>
+      </div>
+      <div class="foot-col">
+        <p class="foot-title">Produk</p>
+        <a href="#demo">Dashboard live</a>
+        <a href="#modul">Ikhtisar modul</a>
+        <a href="#top">Keamanan data</a>
+      </div>
+      <div class="foot-col">
+        <p class="foot-title">Kontak</p>
+        <a href="#demo">hello@omnihr.id</a>
+        <span class="meta">Jakarta · 09.00–18.00 WIB</span>
+      </div>
+    </div>
+    <div class="foot-bar">
+      <span class="meta">© 2026 OmniHR Pulse</span>
+      <span class="meta">Data pada halaman ini adalah data demo, bukan data pelanggan. Foto: Pexels (lisensi Pexels).</span>
+    </div>
+  </div>
+</footer>
+
+<div class="tooltip" id="tip" role="tooltip"></div>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = (s, r = document) => r.querySelector(s);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── tooltip ─────────────────────────────────────────────── */
+  const tip = $('#tip');
+  function showTip(x, y, html) {
+    tip.innerHTML = html;
+    tip.style.left = Math.min(window.innerWidth - 12, Math.max(12, x)) + 'px';
+    tip.style.top = y + 'px';
+    tip.classList.add('on');
+  }
+  function hideTip() { tip.classList.remove('on'); }
+
+  /* ── svg helpers ─────────────────────────────────────────── */
+  function el(tag, attrs = {}, parent) {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function smooth(pts) {
+    if (!pts.length) return '';
+    let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      const c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+      const c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+      d += ` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+    }
+    return d;
+  }
+  const fmt = (v, d = 1) => v.toFixed(d).replace('.', ',');
+
+  /* ── 1. attendance chart (interactive) ───────────────────── */
+  const att = {
+    '7':  { v: [92.6, 93.4, 91.9, 94.8, 93.1, 95.2, 94.2], x: ['15/10', '17/10', '19/10', '21/10'] },
+    '30': { v: [90.4, 91.2, 90.8, 91.6, 92.1, 91.4, 92.3, 92.9, 92.2, 93.1, 92.6, 93.4, 93.0, 93.8, 92.9, 93.5, 94.1, 93.4, 94.2, 93.6, 94.4, 93.9, 94.6, 94.0, 94.8, 94.3, 95.0, 94.6, 94.4, 94.2], x: ['22/09', '02/10', '11/10', '21/10'] },
+    '90': { v: [89.8, 90.6, 91.4, 90.9, 92.0, 92.8, 92.1, 93.0, 93.6, 93.2, 93.9, 94.2], x: ['Agu', 'Sep', 'Okt', '21/10'] }
+  };
+  const attSvg = $('#att-chart svg');
+  const attGrid = $('#att-grid'), attSeries = $('#att-series'), attAxis = $('#att-axis');
+  const AW = 420, AH = 148, AL = 4, AR = 4, AT = 12, AB = 14;
+  let attCur = '30', attPts = [], cross;
+
+  function renderAtt(key) {
+    const d = att[key], n = d.v.length;
+    attCur = key;
+    attGrid.innerHTML = ''; attSeries.innerHTML = '';
+    const x = i => AL + i * (AW - AL - AR) / (n - 1);
+    const y = v => AH - AB - (v - 88) / 10 * (AH - AT - AB);
+    [90, 92, 94, 96].forEach(gv => {
+      el('line', { x1: AL, y1: y(gv), x2: AW - AR, y2: y(gv), class: 'grid-line' }, attGrid);
+    });
+    el('line', { x1: AL, y1: y(92), x2: AW - AR, y2: y(92), stroke: 'var(--il-3)', 'stroke-width': 1, 'stroke-dasharray': '3 4', opacity: .4 }, attGrid);
+    attPts = d.v.map((v, i) => [x(i), y(v)]);
+    const line = smooth(attPts);
+    el('path', { d: `${line} L${attPts[n - 1][0]},${AH - AB} L${AL},${AH - AB} Z`, class: 'area' }, attSeries);
+    el('path', { d: line, class: 'line' }, attSeries);
+    if (n <= 12) attPts.forEach(p => el('circle', { cx: p[0], cy: p[1], r: 2.6, class: 'dot' }, attSeries));
+    cross = el('line', { x1: 0, y1: AT - 4, x2: 0, y2: AH - AB, class: 'cross' }, attSeries);
+
+    attAxis.innerHTML = d.x.map(t => `<span>${t}</span>`).join('');
+    const avg = d.v.reduce((a, b) => a + b, 0) / n;
+    $('#att-val').innerHTML = fmt(avg) + '<span>%</span>';
+    document.querySelectorAll('.seg-btn').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.range === key)));
+  }
+  attSvg.removeAttribute('preserveAspectRatio');
+  attSvg.addEventListener('mousemove', e => {
+    const r = attSvg.getBoundingClientRect();
+    const vx = (e.clientX - r.left) / r.width * AW;
+    const d = att[attCur], n = d.v.length;
+    const i = Math.max(0, Math.min(n - 1, Math.round((vx - AL) / ((AW - AL - AR) / (n - 1)))));
+    const p = attPts[i];
+    if (!p) return;
+    cross.setAttribute('x1', p[0]); cross.setAttribute('x2', p[0]);
+    cross.style.opacity = 1;
+    showTip(e.clientX, e.clientY, `<b>${fmt(d.v[i])}%</b> tepat waktu`);
+  });
+  attSvg.addEventListener('mouseleave', () => { cross.style.opacity = 0; hideTip(); });
+  document.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => renderAtt(btn.dataset.range));
+  });
+  renderAtt('30');
+
+  /* ── 2. payroll donut ────────────────────────────────────── */
+  const C = 2 * Math.PI * 46;
+  const segs = [
+    { v: 62, label: 'Gaji pokok' },
+    { v: 14, label: 'Lembur' },
+    { v: 24, label: 'Tunjangan' }
+  ];
+  let off = 0;
+  document.querySelectorAll('#payroll-donut .seg-arc').forEach((arc, i) => {
+    const len = segs[i].v / 100 * C;
+    arc.setAttribute('transform', 'rotate(-90 60 60)');
+    arc.setAttribute('stroke-dasharray', `${len} ${C - len}`);
+    arc.setAttribute('stroke-dashoffset', -off);
+    off += len;
+    arc.addEventListener('mouseenter', e => {
+      $('#dc-val').textContent = segs[i].v + '%';
+      $('#dc-lab').textContent = segs[i].label;
+      const r = arc.getBoundingClientRect();
+      showTip(r.left + r.width / 2, r.top, `${segs[i].label} · <b>${segs[i].v}%</b>`);
+    });
+    arc.addEventListener('mouseleave', () => {
+      $('#dc-val').textContent = 'Rp 8,4 M';
+      $('#dc-lab').textContent = 'dari 10 M';
+      hideTip();
+    });
+  });
+
+  /* ── 3. productivity gauge ───────────────────────────────── */
+  const gFill = $('#g-fill'), gNeedle = $('#g-needle'), gNum = $('#g-num');
+  const G_LEN = 214;
+  function setGauge(g) {
+    gFill.setAttribute('stroke-dashoffset', (G_LEN * (1 - g / 100)).toFixed(1));
+    gNeedle.style.transform = `rotate(${(g / 100 * 180 - 90).toFixed(1)}deg)`;
+    gNum.textContent = g;
+  }
+  setGauge(reduce ? 78 : 0);
+  requestAnimationFrame(() => setTimeout(() => setGauge(78), 260));
+  if (!reduce) {
+    setInterval(() => {
+      setGauge(76 + Math.round(Math.random() * 5));
+    }, 9000);
+  }
+
+  /* ── 4. attendance heatmap ───────────────────────────────── */
+  const days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+  const heat = $('#heat');
+  const heatVals = [];
+  days.forEach((d, di) => {
+    const lab = document.createElement('span');
+    lab.className = 'heat-lbl'; lab.textContent = d;
+    heat.appendChild(lab);
+    for (let h = 0; h < 12; h++) {
+      const weekend = di > 4;
+      let base = weekend ? .12 : .5;
+      if (!weekend && (h < 2 || (h > 3 && h < 6) || h > 8)) base += .28;
+      if (!weekend && h > 5 && h < 8) base -= .12;
+      const v = Math.max(.04, Math.min(.98, base + Math.sin((di + 1) * (h + 2)) * .14));
+      heatVals.push({ d, h, v });
+      const cell = document.createElement('span');
+      cell.className = 'heat-cell';
+      cell.style.background = `oklch(${(0.245 + v * 0.55).toFixed(3)} ${(0.03 + v * 0.12).toFixed(3)} 290)`;
+      cell.addEventListener('mouseenter', e => {
+        const r = cell.getBoundingClientRect();
+        showTip(r.left + r.width / 2, r.top, `${d} ${String(8 + h).padStart(2, '0')}.00 · <b>${Math.round(v * 46)}</b> check-in`);
+      });
+      cell.addEventListener('mouseleave', hideTip);
+      heat.appendChild(cell);
+    }
+  });
+
+  (() => {
+    const host = $('#heat-hours');
+    if (!host) return;
+    host.appendChild(document.createElement('span')); // gutter column
+    const labels = { 0: '08', 3: '11', 6: '14', 9: '17', 11: '19' };
+    for (let i = 0; i < 12; i++) {
+      const sp = document.createElement('span');
+      sp.textContent = labels[i] || '';
+      host.appendChild(sp);
+    }
+  })();
+
+  /* ── 5. horizontal bars (overtime + skill gap) ───────────── */
+  function bars(host, rows, unit, hotFirst) {
+    host.innerHTML = '';
+    const max = Math.max(...rows.map(r => r[1]));
+    rows.forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'bar-row' + ((hotFirst && i === 0) ? ' hot' : '');
+      row.innerHTML = `<span class="bar-label">${r[0]}</span>
+        <span class="bar-track"><span class="bar-fill"></span></span>
+        <span class="bar-val">${r[1].toLocaleString('id-ID')}${unit}</span>`;
+      host.appendChild(row);
+      const fill = row.querySelector('.bar-fill');
+      requestAnimationFrame(() => { fill.style.width = (r[1] / max * 100).toFixed(1) + '%'; });
+    });
+  }
+  bars($('#ot-bars'), [['Sales', 1284, 'jam'], ['Operasional', 962], ['Customer Care', 740], ['Finance', 418], ['Tech', 356]].map(r => [r[0], r[1]]), ' jam', true);
+  bars($('#gap-bars'), [['Sales', 22], ['Customer Care', 18], ['Operasional', 11], ['Finance', 7]], '%', true);
+
+  /* ── 6. module trend lines ───────────────────────────────── */
+  function miniLine(svg, H, ptsData, o) {
+    const W = 480, L = 6, R = 8, T = 10, B = o.bottom || 8;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.innerHTML = '';
+    const n = ptsData.length;
+    const x = i => L + i * (W - L - R) / (n - 1);
+    const y = v => H - B - (v - o.min) / (o.max - o.min) * (H - T - B);
+    if (o.grid) {
+      o.grid.forEach(gv => {
+        el('line', { x1: L, y1: y(gv), x2: W - R, y2: y(gv), class: 'grid-line' }, svg);
+        if (o.labels) {
+          const t = el('text', { x: L, y: y(gv) - 5, class: 'x-lbl' }, svg);
+          t.textContent = gv + (o.suffix || '');
+          t.setAttribute('style', 'font-family:var(--font-mono);font-size:9px;fill:var(--muted);opacity:.75');
+        }
+      });
+    }
+    const pts = ptsData.map((v, i) => [x(i), y(v)]);
+    return { svg, pts, x, y, W, H, L, R, T, B };
+  }
+
+  // 6a — 30 day accuracy
+  (() => {
+    const svg = $('#m1-line');
+    const data = att['30'].v;
+    const g = miniLine(svg, 120, data, { min: 88, max: 98, grid: [92, 96] });
+    const ln = smooth(g.pts);
+    el('path', { d: `${ln} L${g.pts[g.pts.length - 1][0]},${g.H - g.B} L${g.L},${g.H - g.B} Z`, class: 'area' }, svg);
+    el('path', { d: ln, class: 'line-main' }, svg);
+    el('line', { x1: g.L, y1: g.y(92), x2: g.W - g.R, y2: g.y(92), stroke: 'var(--il-3)', 'stroke-width': 1, 'stroke-dasharray': '4 4', opacity: .45 }, svg);
+    el('circle', { cx: g.pts[g.pts.length - 1][0], cy: g.pts[g.pts.length - 1][1], r: 3.4, class: 'dot' }, svg);
+  })();
+
+  // 6b — payroll forecast
+  (() => {
+    const svg = $('#m2-line');
+    const vals = [7.2, 7.4, 7.1, 7.8, 8.4, 8.7, 8.9, 9.2];
+    const months = ['Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'Jan'];
+    const g = miniLine(svg, 130, vals, { min: 6, max: 10.5, grid: [7, 8, 9], bottom: 22 });
+    const act = g.pts.slice(0, 5), fc = g.pts.slice(4);
+    const actLine = smooth(act), fcLine = smooth(fc);
+    el('path', { d: `${actLine} L${act[act.length - 1][0]},${g.H - g.B} L${g.L},${g.H - g.B} Z`, class: 'area' }, svg);
+    el('path', { d: `${fcLine} L${fc[fc.length - 1][0]},${g.H - g.B} L${fc[0][0]},${g.H - g.B} Z`, class: 'area-2' }, svg);
+    el('line', { x1: g.L, y1: g.y(10), x2: g.W - g.R, y2: g.y(10), class: 'pagu' }, svg);
+    el('path', { d: actLine, class: 'line-main' }, svg);
+    el('path', { d: fcLine, class: 'line-alt' }, svg);
+    el('circle', { cx: act[0][0], cy: act[0][1], r: 0, class: 'dot' }, svg);
+    [0, 2, 4, 6, 7].forEach(i => {
+      const t = el('text', { x: g.pts[i][0], y: g.H - 6, 'text-anchor': 'middle' }, svg);
+      t.textContent = months[i];
+      t.setAttribute('style', 'font-family:var(--font-mono);font-size:9px;fill:var(--muted)');
+    });
+    const pl = el('text', { x: g.W - g.R, y: g.y(10) - 5, 'text-anchor': 'end' }, svg);
+    pl.textContent = 'pagu 10 M';
+    pl.setAttribute('style', 'font-family:var(--font-mono);font-size:9px;fill:var(--muted)');
+  })();
+
+  // 6c — exam normal curve
+  (() => {
+    const svg = $('#m3-curve');
+    const pts = [], mean = 74, sd = 9;
+    for (let s = 40; s <= 100; s += 1.5) pts.push([s, Math.exp(-Math.pow(s - mean, 2) / (2 * sd * sd))]);
+    const data = pts.map(p => p[1]);
+    const g = miniLine(svg, 132, data, { min: 0, max: 1.05, bottom: 6 });
+    const ln = smooth(g.pts);
+    el('path', { d: `${ln} L${g.pts[g.pts.length - 1][0]},${g.H - g.B} L${g.L},${g.H - g.B} Z`, class: 'area' }, svg);
+    el('path', { d: ln, class: 'line-main' }, svg);
+    const mx = g.pts[pts.findIndex(p => p[0] >= 74)][0];
+    el('line', { x1: mx, y1: g.T, x2: mx, y2: g.H - g.B, stroke: 'var(--il-3)', 'stroke-width': 1, 'stroke-dasharray': '3 4', opacity: .55 }, svg);
+    const t = el('text', { x: mx + 6, y: g.T + 10 }, svg);
+    t.textContent = 'μ 74';
+    t.setAttribute('style', 'font-family:var(--font-mono);font-size:9px;fill:var(--il-3)');
+    // shaded pass band 60-85
+    el('rect', { x: g.x(60), y: g.T, width: g.x(85) - g.x(60), height: g.H - g.B - g.T, fill: 'var(--accent)', opacity: .05 }, svg);
+  })();
+
+  /* ── 7. leave seasonality ────────────────────────────────── */
+  (() => {
+    const vals = [8, 7, 9, 11, 6, 14, 10, 7, 9, 11, 13, 18];
+    const mons = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const host = $('#leave-chart'), axis = $('#leave-axis');
+    const max = 21;
+    vals.forEach((v, i) => {
+      const col = document.createElement('div');
+      col.className = 'col' + (v >= 14 ? ' hot' : '');
+      col.innerHTML = (v >= 13 ? `<span class="col-val">${v}%</span>` : '') + `<span class="col-bar" title="${mons[i]} · ${v}% cuti"></span>`;
+      col.addEventListener('mouseenter', e => {
+        const r = col.getBoundingClientRect();
+        showTip(r.left + r.width / 2, r.top - 4, `<b>${v}%</b> karyawan cuti`);
+      });
+      col.addEventListener('mouseleave', hideTip);
+      host.appendChild(col);
+      const bar = col.querySelector('.col-bar');
+      requestAnimationFrame(() => { bar.style.height = Math.max(3, v / max * 100) + '%'; });
+      const s = document.createElement('span');
+      s.textContent = mons[i];
+      axis.appendChild(s);
+    });
+  })();
+
+  /* ── 8. library confirmations ────────────────────────────── */
+  (() => {
+    const docs = [
+      { n: 'SOP Keamanan Data v4.2', p: 96, c: '230 / 240' },
+      { n: 'Prosedur Refund &amp; Retur', p: 88, c: '211 / 240' },
+      { n: 'Panduan Layanan Pelanggan', p: 82, c: '197 / 240' }
+    ];
+    const host = $('#doc-list');
+    docs.forEach(d => {
+      const row = document.createElement('div');
+      row.className = 'doc-row' + (d.p < 85 ? ' low' : '');
+      row.innerHTML = `<span class="doc-name">${d.n}</span><span class="doc-pct">${d.p}% · ${d.c}</span>
+        <span class="doc-bar"><span class="doc-fill"></span></span>`;
+      host.appendChild(row);
+      const fill = row.querySelector('.doc-fill');
+      requestAnimationFrame(() => { fill.style.width = d.p + '%'; });
+    });
+  })();
+})();
+</script>
+</body>
+</html>
