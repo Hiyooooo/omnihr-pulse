@@ -3,8 +3,21 @@ import Image from "next/image";
 import { Kicker } from "@/components/ui/Kicker";
 import { Button } from "@/components/ui/Button";
 import { FloatChip } from "@/components/ui/FloatChip";
+import { DEFAULT_CONFIG } from "@/lib/site";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  headline?: string;
+  subheadline?: string;
+  ctaText?: string;
+  whatsappUrl?: string;
+}
+
+export function HeroSection({
+  headline = DEFAULT_CONFIG.hero.headline,
+  subheadline = DEFAULT_CONFIG.hero.subheadline,
+  ctaText = DEFAULT_CONFIG.hero.cta_text,
+  whatsappUrl = DEFAULT_CONFIG.cta.whatsapp_url,
+}: HeroSectionProps) {
   return (
     <section className="section py-11 md:py-20" id="top" data-od-id="hero">
       <div className="container-app">
@@ -13,17 +26,22 @@ export function HeroSection() {
           <div>
             <Kicker>HRIS analitik &middot; real-time</Kicker>
             <h1 className="mb-5 text-fg">
-              Setiap keputusan SDM punya angkanya.
+              {headline}
             </h1>
             <p className="lead mb-7">
-              OmniHR Pulse menyatukan absensi, payroll, ujian, izin, dan SOP dalam satu layar analitik: supaya tim sales, finance, dan operasional memutuskan dengan data pagi ini, bukan rekap akhir bulan.
+              {subheadline}
             </p>
             <div className="flex items-center gap-2.5 flex-wrap">
-              <Button variant="primary" href="#demo">
-                Buka dashboard live
+              <Button
+                variant="primary"
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {ctaText}
               </Button>
-              <Button variant="ghost" href="#modul" hasArrow>
-                Lihat 5 modul
+              <Button variant="ghost" href="#demo" hasArrow>
+                Buka live dashboard
               </Button>
             </div>
             <div className="flex items-center gap-2 mt-5.5 font-mono text-[11.5px] text-muted tracking-wide">

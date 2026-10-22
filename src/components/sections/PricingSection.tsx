@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/Button";
 import { pricingTiers } from "@/lib/data";
 import { getWhatsAppUrl } from "@/lib/site";
 
-export function PricingSection() {
+interface PricingSectionProps {
+  whatsappNumber?: string;
+}
+
+export function PricingSection({ whatsappNumber }: PricingSectionProps) {
   const [employeeCount, setEmployeeCount] = useState<number>(75);
 
   const starterCost = employeeCount * 18000;
@@ -112,7 +116,7 @@ export function PricingSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {pricingTiers.map((tier) => {
             const isHighlight = tier.highlight;
-            const waUrl = getWhatsAppUrl(tier.whatsappMessage);
+            const waUrl = getWhatsAppUrl(tier.whatsappMessage, whatsappNumber);
 
             return (
               <div

@@ -2,10 +2,16 @@ import React from "react";
 import { Button } from "@/components/ui/Button";
 import { getWhatsAppUrl } from "@/lib/site";
 
-export function CtaSection() {
-  const whatsappUrl = getWhatsAppUrl(
-    "Halo Tim OmniHR Pulse, kami ingin menjadwalkan presentasi produk dan sesi live demo privat untuk jajaran manajemen kami minggu ini."
-  );
+interface CtaSectionProps {
+  whatsappUrl?: string;
+}
+
+export function CtaSection({ whatsappUrl }: CtaSectionProps) {
+  const finalWaUrl =
+    whatsappUrl ||
+    getWhatsAppUrl(
+      "Halo Tim OmniHR Pulse, kami ingin menjadwalkan presentasi produk dan sesi live demo privat untuk jajaran manajemen kami minggu ini."
+    );
 
   return (
     <section className="section py-16 md:py-24" data-od-id="cta-strip">
@@ -22,7 +28,7 @@ export function CtaSection() {
           <div className="flex gap-2.5 flex-wrap">
             <Button
               variant="primary"
-              href={whatsappUrl}
+              href={finalWaUrl}
               target="_blank"
               rel="noopener noreferrer"
             >

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { DEFAULT_CONFIG } from "@/lib/site";
 
 const displayFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -30,23 +31,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pulse.omnihr.id"),
-  title: "OmniHR Pulse - HRIS Berbasis Analitik & Metrik Kinerja Real-Time",
-  description:
-    "Ambil keputusan SDM berbasis data akurat. Pantau analitik absensi, efisiensi payroll, dan evaluasi staf dalam satu layar.",
-  keywords: [
-    "HRIS analitik",
-    "software absensi real-time",
-    "prediksi payroll perusahaan",
-    "evaluasi kinerja kurva normal",
-    "kalender musim cuti",
-    "kepatuhan SOP digital",
-    "workforce analytics Indonesia",
-    "sales force HRIS",
-  ],
+  metadataBase: new URL(`https://${DEFAULT_CONFIG.site.domain}`),
+  title: DEFAULT_CONFIG.seo.meta_title,
+  description: DEFAULT_CONFIG.seo.meta_description,
+  keywords: DEFAULT_CONFIG.seo.keywords,
   authors: [{ name: "Akarindo OmniHR Team" }],
   icons: {
-    icon: "/favicon.svg",
+    icon: DEFAULT_CONFIG.branding.favicon_url,
   },
   alternates: {
     canonical: "/",
@@ -54,17 +45,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://pulse.omnihr.id",
-    title: "OmniHR Pulse - HRIS Berbasis Analitik & Metrik Kinerja Real-Time",
-    description:
-      "Ambil keputusan SDM berbasis data akurat. Pantau analitik absensi, efisiensi payroll, dan evaluasi staf dalam satu layar.",
-    siteName: "OmniHR Pulse",
+    url: `https://${DEFAULT_CONFIG.site.domain}`,
+    title: DEFAULT_CONFIG.seo.meta_title,
+    description: DEFAULT_CONFIG.seo.meta_description,
+    siteName: DEFAULT_CONFIG.site.name,
+    images: [{ url: "/opengraph-image" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "OmniHR Pulse - HRIS Berbasis Analitik & Metrik Kinerja Real-Time",
-    description:
-      "Ambil keputusan SDM berbasis data akurat. Pantau analitik absensi, efisiensi payroll, dan evaluasi staf dalam satu layar.",
+    title: DEFAULT_CONFIG.seo.meta_title,
+    description: DEFAULT_CONFIG.seo.meta_description,
+    images: ["/opengraph-image"],
   },
 };
 

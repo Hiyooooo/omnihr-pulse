@@ -1,4 +1,6 @@
 import React from "react";
+import type { Metadata } from "next";
+import Script from "next/script";
 import { Topnav } from "@/components/layout/Topnav";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -14,24 +16,129 @@ import { LeaveVisual } from "@/components/modules/LeaveVisual";
 import { LibraryVisual } from "@/components/modules/LibraryVisual";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { TooltipProvider } from "@/components/ui/Tooltip";
+import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { generateSchema } from "@/lib/schema";
+import { getSiteConfig } from "@/lib/site";
 
-export default function Home() {
-  const schema = generateSchema();
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getSiteConfig();
+  const domain = config.site.domain || "pulse.omnihr.id";
+  const baseUrl = domain.startsWith("http") ? domain : `https://${domain}`;
+
+  return {
+    metadataBase: new URL(baseUrl),
+    title: config.seo.meta_title,
+    description: config.seo.meta_description,
+    keywords: config.seo.keywords,
+    authors: [{ name: "Akarindo OmniHR Team" }],
+    icons: {
+      icon: config.branding.favicon_url || "/favicon.svg",
+    },
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      type: "website",
+      locale: "id_ID",
+      url: baseUrl,
+      title: config.seo.meta_title,
+      description: config.seo.meta_description,
+      siteName: config.site.name,
+      images: config.seo.og_image_url
+        ? [{ url: config.seo.og_image_url }]
+        : [{ url: "/opengraph-image" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: config.seo.meta_title,
+      description: config.seo.meta_description,
+      images: config.seo.og_image_url
+        ? [config.seo.og_image_url]
+        : ["/opengraph-image"],
+    },
+  };
+}
+
+export default async function Home() {
+  const config = await getSiteConfig();
+  const schema = generateSchema(config);
 
   return (
     <TooltipProvider>
+      {/* Dynamic Theme Color Injection from Laravel Admin */}
+      {config.branding.primary_color && (
+        <style>{`:root { --accent: ${config.branding.primary_color}; --accent-strong: ${config.branding.primary_color}; }`}</style>
+      )}
+
+      {/* Google Analytics Script if Configured in Admin */}
+      {config.tracking.ga_id && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${config.tracking.ga_id}`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${config.tracking.ga_id}');
+            `}
+          </Script>
+        </>
+      )}
+
+      {/* Meta Pixel Script if Configured in Admin */}
+      {config.tracking.meta_pixel_id && (
+        <>
+          <Script id="meta-pixel" strategy="afterInteractive">
+            {`
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${config.tracking.meta_pixel_id}');
+              fbq('track', 'PageView');
+            `}
+          </Script>
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              height="1"
+              width="1"
+              style={{ display: "none" }}
+              src={`https://www.facebook.com/tr?id=${config.tracking.meta_pixel_id}&ev=PageView&noscript=1`}
+              alt=""
+            />
+          </noscript>
+        </>
+      )}
+
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
 
-      <Topnav />
+      {/* Dynamic Topnav */}
+      <Topnav
+        logoUrl={config.branding.logo_url}
+        siteName={config.site.name}
+        whatsappUrl={config.cta.whatsapp_url}
+      />
 
       <main id="content">
-        {/* Hero Section */}
-        <HeroSection />
+        {/* Dynamic Hero Section */}
+        <HeroSection
+          headline={config.hero.headline}
+          subheadline={config.hero.subheadline}
+          ctaText={config.hero.cta_text}
+          whatsappUrl={config.cta.whatsapp_url}
+        />
 
         {/* Live Dashboard Section */}
         <LiveDashboard />
@@ -132,16 +239,28 @@ export default function Home() {
         />
 
         {/* Pricing & Interactive Cost Calculator */}
-        <PricingSection />
+        <PricingSection whatsappNumber={config.cta.whatsapp_number} />
 
         {/* Statement Band */}
         <StatementBand />
 
         {/* Final Conversion CTA Strip */}
-        <CtaSection />
+        <CtaSection whatsappUrl={config.cta.whatsapp_url} />
       </main>
 
-      <Footer />
+      {/* Dynamic Footer */}
+      <Footer
+        logoUrl={config.branding.logo_url}
+        siteName={config.site.name}
+        email={config.contact.email}
+        phone={config.contact.phone}
+        socialLinks={config.contact.social_links}
+        footerText={config.footer_text}
+        whatsappUrl={config.cta.whatsapp_url}
+      />
+
+      {/* Floating WhatsApp CTA */}
+      <FloatingWhatsApp whatsappUrl={config.cta.whatsapp_url} />
     </TooltipProvider>
   );
 }

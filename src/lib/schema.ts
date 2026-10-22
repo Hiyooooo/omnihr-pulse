@@ -1,15 +1,21 @@
-export function generateSchema() {
+import { SiteConfig, DEFAULT_CONFIG } from "@/lib/site";
+
+export function generateSchema(customConfig?: SiteConfig) {
+  const config = customConfig || DEFAULT_CONFIG;
+  const domain = config.site.domain || "pulse.omnihr.id";
+  const url = domain.startsWith("http") ? domain : `https://${domain}`;
+  const logo = config.branding.logo_url || `${url}/favicon.svg`;
+
   return {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "SoftwareApplication",
-        "name": "OmniHR Pulse",
-        "url": "https://pulse.omnihr.id",
+        "name": config.site.name,
+        "url": url,
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "All (Web SaaS Cloud Application)",
-        "description":
-          "Platform HRIS enterprise berbasis analitik real-time yang menyatukan absensi, proyeksi payroll, kurva evaluasi ujian, kalender cuti musiman, dan kepatuhan SOP digital.",
+        "description": config.seo.meta_description,
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -26,12 +32,12 @@ export function generateSchema() {
       },
       {
         "@type": "Organization",
-        "name": "OmniHR Pulse by Akarindo",
-        "url": "https://pulse.omnihr.id",
-        "logo": "https://pulse.omnihr.id/favicon.svg",
+        "name": `${config.site.name} by Akarindo`,
+        "url": url,
+        "logo": logo,
         "contactPoint": {
           "@type": "ContactPoint",
-          "telephone": "+62-812-3456-7890",
+          "telephone": config.contact.phone,
           "contactType": "sales",
           "areaServed": "ID",
           "availableLanguage": ["Indonesian", "English"],
