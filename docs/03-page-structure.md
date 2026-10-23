@@ -28,6 +28,10 @@
    ↓
 [05 LIBRARY]          Tingkat Baca & Konfirmasi SOP Per Divisi + Mini Stats + Foto Library
    ↓
+[PRICING & CALCULATOR] Pilihan Investasi Transparan + Kalkulator Simulasi Biaya Karyawan (#harga)
+   ↓
+[FAQ SECTION]         Tanya Jawab Operasional: Filter Kategori + Accordion Interaktif (#faq)
+   ↓
 [STATEMENT BAND]      Prinsip Produk: "Rekap menjelaskan masa lalu. Pulse menjelaskan minggu depan."
    ↓
 [FINAL CTA STRIP]     Ajakan Bertindak Langsung ke WhatsApp Demo + Link Eksplorasi
@@ -187,7 +191,31 @@
 
 ---
 
-### 2.10 Statement Band Section (`.band`)
+### 2.10 Pilihan Investasi & Kalkulator Biaya (`#harga`)
+- **Kicker:** `Pilihan investasi`
+- **Headline (H2):** `Harga transparan untuk setiap skala bisnis.`
+- **Lead Text:**
+  > *"Mulai dari UKM bertumbuh hingga armada ribuan staf: pilih tingkat analitik yang sesuai dengan ritme operasional Anda tanpa biaya setup tersembunyi."*
+- **Komponen Interaktif:**
+  - Kalkulator slider simulasi biaya karyawan (rentang 20-500 staf).
+  - 3 kartu paket berjenjang: *Pulse Starter* (Rp 18.000), *Pulse Pro* (Rp 32.000, direkomendasikan), dan *Pulse Enterprise* (Kustom).
+
+---
+
+### 2.11 Section FAQ / Tanya Jawab Operasional (`#faq`)
+- **Kicker:** `Tanya jawab operasional`
+- **Headline (H2):** `Pertanyaan yang paling sering ditanyakan direksi dan tim HR.`
+- **Lead Text:**
+  > *"Jawaban lugas seputar integrasi absensi lapangan, keandalan forecasting payroll, kepatuhan regulasi ketenagakerjaan, hingga perlindungan data karyawan Anda."*
+- **Komponen Interaktif:**
+  - Filter kategori responsif (`Semua`, `Absensi & Perangkat`, `Payroll & Anggaran`, `Perizinan & Musim Cuti`, `Evaluasi & Ujian`, `Implementasi & Integrasi`, `Keamanan Data`, `Layanan & Dukungan`).
+  - Accordion interaktif dengan navigasi keyboard (`aria-expanded`, `aria-controls`, `role="region"`).
+  - 7 Pertanyaan operasional mendalam dengan indeks numerik tabular (`01` - `07`).
+  - Callout box bantuan langsung dengan tombol ke WhatsApp Sales.
+
+---
+
+### 2.12 Statement Band Section (`.band`)
 - **Kicker:** `Prinsip produk`
 - **Pernyataan Inti (H2):**
   > `Rekap bulanan menjelaskan masa lalu.`<br/>

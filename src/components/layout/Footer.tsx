@@ -100,6 +100,12 @@ export function Footer({
             >
               Paket investasi
             </a>
+            <a
+              href="#faq"
+              className="hover:text-fg transition-colors duration-150"
+            >
+              Tanya jawab (FAQ)
+            </a>
           </div>
 
           {/* Col 4: Kontak & Media Sosial */}

@@ -1,4 +1,5 @@
 import { SiteConfig, DEFAULT_CONFIG } from "@/lib/site";
+import { faqData } from "@/lib/data";
 
 export function generateSchema(customConfig?: SiteConfig) {
   const config = customConfig || DEFAULT_CONFIG;
@@ -42,6 +43,17 @@ export function generateSchema(customConfig?: SiteConfig) {
           "areaServed": "ID",
           "availableLanguage": ["Indonesian", "English"],
         },
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": faqData.map((item) => ({
+          "@type": "Question",
+          "name": item.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": item.answer,
+          },
+        })),
       },
     ],
   };

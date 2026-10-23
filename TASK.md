@@ -120,5 +120,16 @@
 
 ---
 
+### Phase 8: Section FAQ & Schema.org FAQPage (Interactive Operational Accordion)
+- [x] **Task 8.1:** Tambahkan dataset FAQ di `src/lib/data.ts` (`FaqItem` & `faqData`) yang menjawab pertanyaan operasional nyata seputar absensi GPS real-time, forecasting payroll, mitigasi risiko kekurangan staf cuti, evaluasi kompetensi Gauss, migrasi data cepat, perlindungan UU PDP, dan layanan pendampingan tutup buku (bebas karakter em dash).
+- [x] **Task 8.2:** Daftarkan navigasi `#faq` pada `siteConfig.navItems` di `src/lib/site.ts` dan tautan Tanya jawab (FAQ) di `src/components/layout/Footer.tsx`.
+- [x] **Task 8.3:** Tambahkan entitas `FAQPage` ke generator JSON-LD Schema di `src/lib/schema.ts` untuk rich snippets di mesin pencari.
+- [x] **Task 8.4:** Bangun komponen `src/components/sections/FaqSection.tsx` dengan filter kategori responsif, accordion aksesibel dengan ARIA (`aria-expanded`, `aria-controls`, `role="region"`), rotasi panah indikator, dan box konsultasi WhatsApp langsung.
+- [x] **Task 8.5:** Rakit `FaqSection` ke dalam alur halaman di `src/app/page.tsx` di antara `PricingSection` dan `StatementBand`.
+- [x] **Task 8.6:** Perbarui test suite `tests/accessibility.test.ts` untuk memverifikasi ketiadaan em dash pada `faqData`, validasi target navigasi `#faq`, kelengkapan entitas schema `FAQPage`, serta validitas item FAQ.
+- [x] **Task 8.7:** Validasi ulang dengan menjalankan `npm run test` (20 passed) dan `npm run build` (lulus tanpa warning).
+
+---
+
 ## Kriteria Selesai (Sign-off)
 Setelah semua task di atas tercentang, proyek Website 08: OmniHR Pulse siap diserahkan dan dipresentasikan.

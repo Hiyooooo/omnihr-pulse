@@ -15,6 +15,7 @@ import { ExamVisual } from "@/components/modules/ExamVisual";
 import { LeaveVisual } from "@/components/modules/LeaveVisual";
 import { LibraryVisual } from "@/components/modules/LibraryVisual";
 import { PricingSection } from "@/components/sections/PricingSection";
+import { FaqSection } from "@/components/sections/FaqSection";
 import { TooltipProvider } from "@/components/ui/Tooltip";
 import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { generateSchema } from "@/lib/schema";
@@ -240,6 +241,9 @@ export default async function Home() {
 
         {/* Pricing & Interactive Cost Calculator */}
         <PricingSection whatsappNumber={config.cta.whatsapp_number} />
+
+        {/* FAQ Section */}
+        <FaqSection whatsappNumber={config.cta.whatsapp_number} />
 
         {/* Statement Band */}
         <StatementBand />

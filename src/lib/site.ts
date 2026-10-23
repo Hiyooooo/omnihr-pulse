@@ -125,6 +125,7 @@ export const siteConfig = {
     { label: "Perizinan", href: "#perizinan" },
     { label: "Library", href: "#library" },
     { label: "Harga", href: "#harga" },
+    { label: "FAQ", href: "#faq" },
   ] as NavItem[],
 };
 

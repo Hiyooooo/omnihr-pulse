@@ -8,6 +8,7 @@ import {
   leaveSeasonalityData,
   librarySopData,
   pricingTiers,
+  faqData,
 } from "@/lib/data";
 import { generateSchema } from "@/lib/schema";
 
@@ -31,6 +32,7 @@ describe("Accessibility & Quality Gate Verifications", () => {
       leaveSeasonalityData,
       librarySopData,
       pricingTiers,
+      faqData,
     });
     expect(allDataSerialized).not.toContain("—");
   });
@@ -43,6 +45,7 @@ describe("Accessibility & Quality Gate Verifications", () => {
       "#perizinan",
       "#library",
       "#harga",
+      "#faq",
     ];
     siteConfig.navItems.forEach((item) => {
       expect(validTargets).toContain(item.href);
@@ -57,10 +60,10 @@ describe("Accessibility & Quality Gate Verifications", () => {
     expect(url).toContain(encodeURIComponent("Halo tim sales"));
   });
 
-  it("builds valid JSON-LD schema with SoftwareApplication and Organization entities", () => {
+  it("builds valid JSON-LD schema with SoftwareApplication, Organization, and FAQPage entities", () => {
     const schema = generateSchema();
     expect(schema["@context"]).toBe("https://schema.org");
-    expect(schema["@graph"]).toHaveLength(2);
+    expect(schema["@graph"]).toHaveLength(3);
 
     const app = schema["@graph"].find((item) => item["@type"] === "SoftwareApplication");
     expect(app).toBeDefined();
@@ -69,6 +72,22 @@ describe("Accessibility & Quality Gate Verifications", () => {
     const org = schema["@graph"].find((item) => item["@type"] === "Organization");
     expect(org).toBeDefined();
     expect(org?.name).toContain("OmniHR Pulse");
+
+    const faq = schema["@graph"].find((item) => item["@type"] === "FAQPage");
+    expect(faq).toBeDefined();
+    expect((faq as any)?.mainEntity?.length).toBeGreaterThan(0);
+  });
+
+  it("ensures faqData contains high-value operational questions with non-empty categories and answers", () => {
+    expect(faqData.length).toBeGreaterThanOrEqual(5);
+    faqData.forEach((item) => {
+      expect(item.id).toBeTruthy();
+      expect(item.category).toBeTruthy();
+      expect(item.question).toBeTruthy();
+      expect(item.answer).toBeTruthy();
+      expect(item.question.length).toBeGreaterThan(15);
+      expect(item.answer.length).toBeGreaterThan(30);
+    });
   });
 });
 

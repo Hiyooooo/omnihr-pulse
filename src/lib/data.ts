@@ -243,3 +243,56 @@ export const pricingTiers: PricingTier[] = [
   },
 ];
 
+export interface FaqItem {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+}
+
+export const faqData: FaqItem[] = [
+  {
+    id: "absensi-realtime",
+    category: "Absensi & Perangkat",
+    question: "Bagaimana cara OmniHR Pulse menarik data kehadiran secara real-time dari karyawan lapangan?",
+    answer: "OmniHR Pulse memanfaatkan validasi lokasi berbasis GPS dengan batas geofencing presisi dan proteksi anti-fake GPS di aplikasi mobile karyawan. Untuk fasilitas fisik seperti pergudangan logistik atau kantor cabang, sistem juga mendukung integrasi API webhook dengan mesin fingerprint dan biometrik yang menyinkronkan data kehadiran setiap 30 detik tanpa perlu ekspor manual.",
+  },
+  {
+    id: "forecasting-payroll",
+    category: "Payroll & Anggaran",
+    question: "Apakah proyeksi payroll 8 bulan sudah memperhitungkan tarif lembur Depnaker dan skema insentif sales?",
+    answer: "Ya. Formula kalkulasi lembur OmniHR Pulse sepenuhnya mematuhi regulasi ketenagakerjaan Indonesia (PP 35/2021) untuk perhitungan hari kerja normal maupun hari libur resmi. Sistem juga mendukung parameter komisi dinamis untuk armada sales, lalu memproyeksikan total akumulasi beban pengeluaran terhadap batas pagu anggaran bulanan yang telah ditentukan direksi.",
+  },
+  {
+    id: "defisit-staf-cuti",
+    category: "Perizinan & Musim Cuti",
+    question: "Bagaimana sistem memprediksi kekurangan staf di masa puncak operasional seperti akhir tahun?",
+    answer: "Modul Perizinan menganalisis sebaran cuti historis 12 bulan dan menyandingkannya dengan kalender ritme operasional bisnis Anda (misalnya momen Harbolnas e-commerce atau musim libur panjang). Jika rasio pengajuan cuti berpotensi melanggar kuota minimum staf di suatu unit kerja, sistem otomatis memunculkan peringatan dini 30 hari sebelumnya agar kepala unit dapat mengatur rotasi jadwal.",
+  },
+  {
+    id: "evaluasi-kompetensi-exam",
+    category: "Evaluasi & Ujian",
+    question: "Apakah modul Exam dapat digunakan untuk sertifikasi internal dengan bank soal mandiri?",
+    answer: "Tentu. Anda dapat mengunggah bank soal pilihan ganda maupun esai, mengatur durasi pengerjaan, dan mengaktifkan proteksi ujian. Setelah ujian selesai, sistem otomatis memplot skor ke dalam kurva normal Gaussian untuk melihat validitas tingkat kesulitan ujian dan memetakan unit kerja mana yang memiliki kesenjangan kompetensi (skill-gap).",
+  },
+  {
+    id: "migrasi-onboarding",
+    category: "Implementasi & Integrasi",
+    question: "Berapa lama waktu yang dibutuhkan untuk migrasi dari spreadsheet atau HRIS sebelumnya?",
+    answer: "Sebagian besar klien kami mulai melihat live dashboard aktif dalam 1 hingga 2 hari kerja. Tim onboarding OmniHR Pulse menyediakan template migrasi data terstruktur (format CSV dan Excel) untuk data karyawan, struktur organisasi, dan saldo cuti berjalan, didampingi langsung oleh tim teknis kami hingga sesi uji coba tuntas.",
+  },
+  {
+    id: "keamanan-data-pdp",
+    category: "Keamanan Data",
+    question: "Bagaimana keamanan data pribadi karyawan dan rekapitulasi gaji perusahaan kami dijamin?",
+    answer: "Keamanan data adalah prioritas mutlak. Seluruh lalu lintas data dienkripsi dengan protokol TLS 1.3 saat transmisi dan AES-256 saat tersimpan (data at rest). Infrastruktur server berlokasi di data center Tier-3 Indonesia sesuai ketentuan UU Perlindungan Data Pribadi (UU PDP). Sistem juga menerapkan kontrol akses berbasis peran (RBAC) berjenjang dengan catatan log audit menyeluruh.",
+  },
+  {
+    id: "support-tutup-buku",
+    category: "Layanan & Dukungan",
+    question: "Bagaimana skema dukungan teknis dan pendampingan jika terjadi kendala saat tutup buku gaji?",
+    answer: "Seluruh pengguna OmniHR Pulse mendapatkan akses prioritas ke tim support via WhatsApp operasional dengan rata-rata waktu respons di bawah 15 menit pada jam kerja. Khusus periode tutup buku payroll perdana, tim kami menyediakan sesi pendampingan langsung melalui panggilan video untuk memastikan slip gaji dan perhitungan pajak terdistribusi dengan akurat.",
+  },
+];
+
+
